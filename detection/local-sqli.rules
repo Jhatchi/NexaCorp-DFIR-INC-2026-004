@@ -1,0 +1,11 @@
+# NexaCorp DFIR INC-2026-004 - Local Suricata ruleset
+# SQL Injection detection for the bru-web-01 DVWA portal incident.
+# Tested on Suricata 6.0.4, offline pcap analysis (suricata -r attack.pcap).
+# SID range 1000001-1000004 reserved for local rules.
+# All rules inspect the normalized http.uri sticky buffer, so URL-encoded
+# payloads (for example %20, %27) are matched in their decoded form.
+
+alert http any any -> any any (msg:"LOCAL SQLi UNION SELECT in URI"; flow:to_server; http.uri; content:"UNION SELECT"; nocase; sid:1000001; rev:1;)
+alert http any any -> any any (msg:"LOCAL SQLi single quote probe"; flow:to_server; http.uri; content:"id=1'"; nocase; sid:1000002; rev:1;)
+alert http any any -> any any (msg:"LOCAL SQLi blind boolean"; flow:to_server; http.uri; content:"SUBSTRING"; nocase; sid:1000003; rev:1;)
+alert http any any -> any any (msg:"LOCAL SQLi information_schema enum"; flow:to_server; http.uri; content:"information_schema"; nocase; sid:1000004; rev:1;)

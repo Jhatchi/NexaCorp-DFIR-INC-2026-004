@@ -1,0 +1,27 @@
+# Evidence bundle is BeCode lab property, never committed
+*.pcap
+*.tar.gz
+nexacorp-INC2026004-evidence/
+evidence_fixed/
+logs/
+wazuh-alerts.json
+
+# Cracking artifacts (contain recovered secrets, keep local)
+*.hash
+*.pot
+.john/
+
+# macOS
+.DS_Store
+._*
+
+# Editor
+.vscode/
+*.swp
+*~
+
+# Python (report generator runs locally, not committed here)
+__pycache__/
+*.pyc
+.venv/
+venv/
