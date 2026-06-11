@@ -23,7 +23,7 @@ Every finding in the report is mapped to one or more techniques. This matrix is 
 
 ## Sequence view
 
-```
+```text
 T1190 (exploit web form)
   -> T1213 (dump users table)
     -> T1110.002 (crack j.martin hash offline)

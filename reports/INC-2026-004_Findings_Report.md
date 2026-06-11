@@ -111,7 +111,7 @@ Forensic analysis of the evidence bundle only, covering four phases: web access 
 
 **Evidence.** From `auth.log`:
 
-```
+```text
 2026-05-30T14:48:06 bru-web-01 sshd[14736]: Accepted password for j.martin from 172.16.50.10 port 49145 ssh2
 session opened for user j.martin(uid=1001)
 ```

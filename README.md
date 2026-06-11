@@ -81,7 +81,7 @@ The operation is deliberate and methodical: a textbook reconnaissance-to-exploit
 
 ## Repository layout
 
-```
+```text
 NexaCorp-DFIR-INC-2026-004/
 ├── README.md                                  (this file)
 ├── LICENSE                                    (MIT)
@@ -121,23 +121,23 @@ The Apache access log (`web_access.log`) and the auth log are native local time 
 
 ## Tools used
 
-**Log analysis**
+### Log analysis
 
 - `grep`, `awk`, `sort`, `uniq` on `web_access.log`:
-  * `awk '{print $1}' web_access.log | sort | uniq -c | sort -rn` to isolate the attacker IP (the only source outside the internal `192.168.10.0/24` range)
-  * `grep` with a SQL-keyword pattern to extract the malicious requests in attack order
+  - `awk '{print $1}' web_access.log | sort | uniq -c | sort -rn` to isolate the attacker IP (the only source outside the internal `192.168.10.0/24` range)
+  - `grep` with a SQL-keyword pattern to extract the malicious requests in attack order
 
-**Packet analysis**
+### Packet analysis
 
 - `tshark` (CLI only):
-  * `tshark -r attack.pcap -Y 'http.request and ip.src==172.16.50.10' -T fields -e tcp.stream -e http.request.uri` to map malicious requests to TCP streams
-  * `tshark -r attack.pcap -q -z follow,tcp,ascii,N` to read the server responses (database name, dumped rows)
+  - `tshark -r attack.pcap -Y 'http.request and ip.src==172.16.50.10' -T fields -e tcp.stream -e http.request.uri` to map malicious requests to TCP streams
+  - `tshark -r attack.pcap -q -z follow,tcp,ascii,N` to read the server responses (database name, dumped rows)
 
-**Offline hash cracking**
+### Offline hash cracking
 
 - `john` (Raw-MD5) against `rockyou.txt`, run on the analyst workstation only, never against the live server. The hash was recovered in under one second.
 
-**Environment**
+### Environment
 
 - `bash` on the BeCode SOC training workstation, plus the analyst Mac for the offline crack. VS Code and Markdown for notes and report authoring.
 
@@ -149,7 +149,7 @@ The evidence bundle is BeCode lab property and is not redistributed. Every claim
 
 Requires the evidence bundle (`logs/web_access.log`, `logs/auth.log`, `attack.pcap`):
 
-```
+```bash
 # Finding 4.1: isolate the attacker (only IP outside 192.168.10.0/24)
 awk '{print $1}' logs/web_access.log | sort | uniq -c | sort -rn
 
