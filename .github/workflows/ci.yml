@@ -15,8 +15,12 @@ jobs:
 
       - name: Fail on em-dash (U+2014) or en-dash (U+2013) in tracked text
         run: |
-          echo "Scanning Markdown files for forbidden dashes..."
-          if grep -rnP "\x{2014}|\x{2013}" --include="*.md" .; then
+          echo "Scanning all tracked files for forbidden dashes..."
+          if grep -rPn "[\x{2013}\x{2014}]" \
+              --exclude-dir=.git \
+              --exclude-dir=node_modules \
+              --binary-files=without-match \
+              . ; then
             echo "::error::Found em-dash (U+2014) or en-dash (U+2013). Replace with colon, comma, parentheses, hyphen, or period."
             exit 1
           fi
