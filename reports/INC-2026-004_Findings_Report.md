@@ -21,7 +21,7 @@ A few hours later, that same outsider used the recovered password to log in to t
 
 ## 2. Executive summary
 
-An external attacker (`172.16.50.10`) exploited a SQL Injection vulnerability in the `id` parameter of the NexaCorp employee portal (`bru-web-01`). The attacker confirmed the flaw with an error-based probe, mapped the database, and exfiltrated the full `users` table, including six accounts and their MD5 password hashes. The employee account `j.martin` used the password `P@ssw0rd123`, recovered offline in under one second against a standard wordlist.
+An external attacker (`172.16.50.10`) exploited a SQL Injection vulnerability in the `id` parameter of the NexaCorp employee portal (`bru-web-01`). The attacker confirmed the flaw with an error-based probe, mapped the database, and exfiltrated the full `users` table, including six accounts and their MD5 password hashes. The employee account `j.martin` used the password `[REDACTED-lab-credential]`, recovered offline in under one second against a standard wordlist.
 
 Approximately five hours later, the attacker reused that credential to authenticate over SSH to the same server and succeeded, then attempted to spray the other stolen accounts (which failed). The outcome is a confirmed authenticated foothold on `bru-web-01` and the exposure of every credential in the portal database. Immediate remediation is required.
 
@@ -75,7 +75,7 @@ Forensic analysis of the evidence bundle only, covering four phases: web access 
 | 1337 | `8d3533d75ae2c3966d7e0d4fcc69216b` | application default |
 | pablo | `0d107d09f5bbe40cade3de5c71e9e9b7` | application default |
 | smithy | `5f4dcc3b5aa765d61d8327deb882cf99` | MD5 of `password` |
-| **j.martin** | **`ccf5538dc31d435d6bab145c924041d8`** | NexaCorp employee account |
+| **j.martin** | **`[REDACTED-md5]`** | NexaCorp employee account |
 
 **Exfiltration time:** 2026-05-30 09:39:58 (+02:00). This is the moment the data left the database.
 
@@ -93,9 +93,9 @@ Forensic analysis of the evidence bundle only, covering four phases: web access 
 
 **Description.** The MD5 hash of `j.martin` was recovered offline against the standard `rockyou.txt` wordlist using John the Ripper, on the analyst workstation, never against the live server. The recovery took under one second.
 
-**Evidence.** Hash `ccf5538dc31d435d6bab145c924041d8` resolves to cleartext `P@ssw0rd123`.
+**Evidence.** Hash `[REDACTED-md5]` resolves to cleartext `[REDACTED-lab-credential]`.
 
-**Analysis.** `P@ssw0rd123` satisfies a typical complexity policy (upper case, lower case, digit, special character, 11 characters) yet falls instantly, because the pattern is common and present in standard wordlists. Syntactic complexity is not the same as resistance to guessing.
+**Analysis.** `[REDACTED-lab-credential]` satisfies a typical complexity policy (upper case, lower case, digit, special character, 11 characters) yet falls instantly, because the pattern is common and present in standard wordlists. Syntactic complexity is not the same as resistance to guessing.
 
 **Remediation.** Block common and predictable passwords by checking new passwords against a known-breached list. Enforce multi-factor authentication. Migrate password storage away from unsalted MD5 toward a slow, salted hash (bcrypt or argon2).
 
@@ -129,7 +129,7 @@ See [`evidence-summary/ioc-summary.md`](../evidence-summary/ioc-summary.md) for 
 - Attacker IP: `172.16.50.10`
 - Targeted endpoint: `/dvwa/vulnerabilities/sqli/`, parameter `id`
 - Payload patterns: `%27`, `ORDER BY`, `UNION SELECT`, `database()`, `information_schema`, `FROM users`, `SUBSTRING(password,...)`
-- Compromised account: `j.martin` (uid 1001), password `P@ssw0rd123`
+- Compromised account: `j.martin` (uid 1001), password `[REDACTED-lab-credential]`
 - Consequence: successful SSH login, 2026-05-30 14:48:06 (+02:00)
 
 ## 6. Timeline

@@ -31,8 +31,8 @@ Targeted endpoint: `/dvwa/vulnerabilities/sqli/`, parameter `id`.
 | ---- | ----- |
 | Database name | `dvwa` |
 | Compromised account | `j.martin` (uid 1001) |
-| Exposed MD5 hash | `ccf5538dc31d435d6bab145c924041d8` |
-| Recovered password | `P@ssw0rd123` |
+| Exposed MD5 hash | `[REDACTED-md5]` |
+| Recovered password | `[REDACTED-lab-credential]` |
 | Other exposed accounts | admin, gordonb, 1337, pablo, smithy (DVWA defaults) |
 
 ## D. Host artifacts (consequence)

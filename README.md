@@ -62,7 +62,7 @@ The operation is deliberate and methodical: a textbook reconnaissance-to-exploit
 | --- | --- | --- | --- |
 | **4.1** | 🔴 CRITICAL | SQL Injection on the `id` parameter (error-based then UNION) | T1190 |
 | **4.2** | 🟠 HIGH | Database enumeration and full `users` table exfiltration | T1213 |
-| **4.3** | 🟠 HIGH | Weak credential recovered offline (`P@ssw0rd123`, MD5) | T1110.002 |
+| **4.3** | 🟠 HIGH | Weak credential recovered offline (`[REDACTED-lab-credential]`, MD5) | T1110.002 |
 | **4.4** | 🔴 CRITICAL | Credential reuse, successful SSH foothold as `j.martin` | T1078, T1021.004 |
 
 **Severity distribution:** 2 CRITICAL / 2 HIGH
@@ -166,7 +166,7 @@ tshark -r attack.pcap -q -z follow,tcp,ascii,447 | grep -iE "First name|Surname|
 tshark -r attack.pcap -q -z follow,tcp,ascii,14 | grep -iE "Surname|First name"
 
 # Finding 4.3: crack the j.martin hash offline (analyst workstation)
-echo 'ccf5538dc31d435d6bab145c924041d8' > jmartin.hash
+echo '[REDACTED-md5]' > jmartin.hash
 john --format=raw-md5 --wordlist=/path/to/rockyou.txt jmartin.hash
 john --show --format=raw-md5 jmartin.hash
 

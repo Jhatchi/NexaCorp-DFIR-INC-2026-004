@@ -28,7 +28,7 @@ All times in local server time (UTC+02:00, CEST), taken from `web_access.log` (H
 
 | Time | Action | Evidence |
 | ---- | ------ | -------- |
-| between 09:39:58 and 14:48:06 | Offline cracking of `j.martin` MD5 hash | No server log. Recovered `P@ssw0rd123` in under 1s against rockyou |
+| between 09:39:58 and 14:48:06 | Offline cracking of `j.martin` MD5 hash | No server log. Recovered `[REDACTED-lab-credential]` in under 1s against rockyou |
 
 ## Phase 4: consequence (from auth.log)
 
