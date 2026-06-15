@@ -187,6 +187,15 @@ grep -iE "172.16.50.10|j.martin" logs/auth.log
 - **Detection ruleset (done):** four Suricata signatures in `detection/`, validated against the capture with per-rule alert counts and false-positive notes, consistent with the Suricata ruleset shipped in INC-2026-001.
 - **v2 (possible):** convert the lab rules to production-tuned signatures (scoped source and destination, `flow:established`, narrower content matches), and add equivalent Wazuh detection logic.
 
+## NexaCorp DFIR series
+
+- [INC-2026-001](https://github.com/Jhatchi/NexaCorp-DFIR-INC-2026-001): Linux infrastructure compromise (vsftpd backdoor, Caldera C2)
+- [INC-2026-002](https://github.com/Jhatchi/NexaCorp-DFIR-INC-2026-002): privilege escalation and persistence (Tor SSH, SUID, backdoor account)
+- [INC-2026-003](https://github.com/Jhatchi/NexaCorp-DFIR-INC-2026-003): month-1 cross-incident assessment
+- **INC-2026-004**: this repository
+- [INC-2026-005](https://github.com/Jhatchi/NexaCorp-DFIR-INC-2026-005): OS command injection and web shell (web portal)
+- [INC-2026-006](https://github.com/Jhatchi/NexaCorp-DFIR-INC-2026-006): stored XSS and session hijacking (web portal)
+
 ## License
 
 [MIT](LICENSE), 2026 Johan-Emmanuel Hatchi.
