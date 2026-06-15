@@ -1,4 +1,4 @@
-# INC-2026-004 Findings Report
+# INC-2026-004 Findings Report: SQL Injection Investigation
 
 **Engagement:** NexaCorp DFIR, SQL Injection Investigation
 **Reference:** BCC-2026 / INC-2026-004
