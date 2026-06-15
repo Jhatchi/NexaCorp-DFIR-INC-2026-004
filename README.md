@@ -56,7 +56,17 @@ About five hours after the data was stolen, the attacker reused the recovered pa
 
 The operation is deliberate and methodical: a textbook reconnaissance-to-exploitation sequence on the web layer, immediately followed by credential reuse against a second service. The most urgent element is the live SSH access, which is the entry point for follow-on activity. Immediate password rotation, account lockdown, and a code fix on the portal are required.
 
-## INC-2026-004 findings summary
+## Kill chain summary
+
+The attack ran as a textbook reconnaissance-to-exploitation chain on the web layer, then pivoted to SSH:
+
+1. **Probe**: an error-based single-quote test (`id=1'`) confirmed the SQL injection on the `id` parameter.
+2. **Mapping**: column counting (`ORDER BY`) and a `UNION SELECT`, then enumeration of `information_schema` (table and column names).
+3. **Exfiltration**: the full `users` table was dumped, including six accounts and their MD5 password hashes.
+4. **Offline cracking**: the `j.martin` hash was recovered offline against a standard wordlist in under one second, on the analyst workstation, never against the live server.
+5. **SSH pivot**: the recovered credential was reused over SSH to `bru-web-01` and the login succeeded, giving an authenticated foothold under a legitimate employee identity. The other stolen accounts, tried over SSH, failed.
+
+## Findings summary
 
 | ID | Severity | Title | Primary MITRE technique |
 | --- | --- | --- | --- |
@@ -79,33 +89,6 @@ The operation is deliberate and methodical: a textbook reconnaissance-to-exploit
 | **Anyone who wants to grep, cite, or diff** | [`reports/INC-2026-004_Findings_Report.md`](reports/INC-2026-004_Findings_Report.md) (Markdown source) | as needed |
 
 **Canonical deliverable:** the PDF in [`reports/`](reports). The Markdown source is the same content, kept in the repo for searchability and version control.
-
-## Repository layout
-
-```text
-NexaCorp-DFIR-INC-2026-004/
-├── README.md                                  (this file)
-├── LICENSE                                    (MIT)
-├── .gitignore
-├── .github/
-│   └── workflows/
-│       └── ci.yml                             markdownlint + typography validation
-├── reports/
-│   ├── INC-2026-004_Findings_Report.pdf        canonical deliverable (generated separately)
-│   └── INC-2026-004_Findings_Report.md         same content, Markdown source
-├── methodology/
-│   ├── attack-timeline.md                     minute-by-minute attack timeline
-│   └── attck-mapping.md                        ATT&CK matrix for this incident
-├── evidence-summary/
-│   └── ioc-summary.md                         IOCs in SIEM-ingestible format
-├── detection/
-│   ├── local-sqli.rules                       four validated Suricata SQLi signatures
-│   └── README.md                              rules, alert counts, MITRE, FP notes
-└── notes/
-    └── journal.md                             analyst investigation notebook
-```
-
-**The `detection/` folder.** INC-2026-001 shipped a Suricata ruleset and INC-2026-002 shipped Wazuh rules. INC-2026-004 continues that line: the capture was analysed offline with Suricata and four local SQLi signatures (UNION SELECT, single-quote probe, blind boolean, information_schema enumeration) were written, validated, and counted against the 6577-packet capture. See `detection/README.md` for the rules, alert counts, MITRE mapping, and false-positive notes.
 
 ## Methodology
 
@@ -142,6 +125,44 @@ The Apache access log (`web_access.log`) and the auth log are native local time 
 
 - `bash` on the BeCode SOC training workstation, plus the analyst Mac for the offline crack. VS Code and Markdown for notes and report authoring.
 
+## Detection engineering
+
+After the forensic reconstruction, four Suricata signatures were written, one per SQL injection technique the attacker used, and validated offline against the 6577-packet capture (`suricata -r`, deterministic, zero-alert baseline). INC-2026-001 shipped a Suricata ruleset and INC-2026-002 shipped Wazuh rules; this incident continues that line on the web layer.
+
+| SID | Technique | MITRE | Alerts |
+|---|---|---|---|
+| 1000001 | UNION SELECT in URI | T1190 | 16 |
+| 1000002 | single-quote probe (`id=1'`) | T1190 | 44 |
+| 1000003 | blind boolean (SUBSTRING) | T1190 | 18 |
+| 1000004 | information_schema enumeration | T1213 | 2 |
+
+Each rule inspects the normalized `http.uri` sticky buffer (Suricata decodes URL encoding before matching). The rules are intentionally simple for a training portal; production tuning (scoped source and destination, `flow:established`, narrower matches on generic keywords like SUBSTRING) is documented in [`detection/README.md`](detection/README.md), with the per-rule alert counts, MITRE mapping, and false-positive notes.
+
+## Repository layout
+
+```text
+NexaCorp-DFIR-INC-2026-004/
+├── README.md                                  (this file)
+├── LICENSE                                    (MIT)
+├── .gitignore
+├── .github/
+│   └── workflows/
+│       └── ci.yml                             markdownlint + typography validation
+├── reports/
+│   ├── INC-2026-004_Findings_Report.pdf        canonical deliverable (generated separately)
+│   └── INC-2026-004_Findings_Report.md         same content, Markdown source
+├── methodology/
+│   ├── attack-timeline.md                     minute-by-minute attack timeline
+│   └── attck-mapping.md                        ATT&CK matrix for this incident
+├── evidence-summary/
+│   └── ioc-summary.md                         IOCs in SIEM-ingestible format
+├── detection/
+│   ├── local-sqli.rules                       four validated Suricata SQLi signatures
+│   └── README.md                              rules, alert counts, MITRE, FP notes
+└── notes/
+    └── journal.md                             analyst investigation notebook
+```
+
 ## Reproducibility
 
 The evidence bundle is BeCode lab property and is not redistributed. Every claim in the report is traceable to a specific log source, packet stream, and timestamp, so anyone with their own copy of the bundle can reproduce the analysis.
@@ -177,16 +198,11 @@ grep -iE "172.16.50.10|j.martin" logs/auth.log
 ## Known limits
 
 - **Forensic-only scope.** This is an investigation lab. Severities are analyst-rated (impact, technique category, threat state), not CVSS-derived.
-- **Detection rules are lab-tuned.** The four Suricata signatures in `detection/` are intentionally simple, suited to a training portal. Production deployment would need tuning (tighter source and destination scoping, narrower content matches on generic keywords like SUBSTRING). This is documented in `detection/README.md`.
+- **Detection rules are lab-tuned (v2 pending).** The four Suricata signatures in `detection/` are intentionally simple, suited to a training portal. Production deployment would need tuning (tighter source and destination scoping, `flow:established`, narrower content matches on generic keywords like SUBSTRING), and adding equivalent Wazuh detection logic. This is documented in `detection/README.md`.
 - **Evidence bundle not redistributed.** The bundle is BeCode lab property. Claims are reproducible by anyone holding their own copy, but the raw logs and packet capture are not published here.
 - **Server-side query not recovered.** The exact back-end SQL statement is inferred from the injection behaviour and the responses, not read from application source code.
 - **Post-foothold activity undetermined.** The successful SSH session as `j.martin` is confirmed, but what the attacker did inside that session is not reconstructible from this bundle. It is the starting point for the next incident.
 - **Capture window.** The PCAP covers the attack window, not the surrounding day. There is no memory acquisition and no filesystem image.
-
-## Roadmap
-
-- **Detection ruleset (done):** four Suricata signatures in `detection/`, validated against the capture with per-rule alert counts and false-positive notes, consistent with the Suricata ruleset shipped in INC-2026-001.
-- **v2 (possible):** convert the lab rules to production-tuned signatures (scoped source and destination, `flow:established`, narrower content matches), and add equivalent Wazuh detection logic.
 
 ## NexaCorp DFIR series
 
@@ -196,12 +212,6 @@ grep -iE "172.16.50.10|j.martin" logs/auth.log
 - **INC-2026-004**: this repository
 - [INC-2026-005](https://github.com/Jhatchi/NexaCorp-DFIR-INC-2026-005): OS command injection and web shell (web portal)
 - [INC-2026-006](https://github.com/Jhatchi/NexaCorp-DFIR-INC-2026-006): stored XSS and session hijacking (web portal)
-
-## License
-
-[MIT](LICENSE), 2026 Johan-Emmanuel Hatchi.
-
-The report text and the methodology notes are released under MIT: free to copy, adapt, and reuse with attribution. The evidence bundle, lab infrastructure, and original engagement briefings remain BeCode Brussels property and are not redistributed.
 
 ## Acknowledgments
 
@@ -218,3 +228,9 @@ Author: **Johan-Emmanuel Hatchi**, French national based in Brussels, cybersecur
 [GitHub](https://github.com/Jhatchi) - [LinkedIn](https://www.linkedin.com/in/johan-emmanuel-hatchi/)
 
 Open to cybersecurity internship opportunities starting September 2026 in Belgium. Looking for SOC L1/L2, DFIR junior, or detection engineering roles where this kind of end-to-end work (web log analysis, packet inspection, offline credential cracking, cross-source correlation, formal client reporting) is in scope.
+
+## License
+
+[MIT](LICENSE), 2026 Johan-Emmanuel Hatchi.
+
+The report text and the methodology notes are released under MIT: free to copy, adapt, and reuse with attribution. The evidence bundle, lab infrastructure, and original engagement briefings remain BeCode Brussels property and are not redistributed.
