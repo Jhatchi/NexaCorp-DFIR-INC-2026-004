@@ -1,4 +1,4 @@
-# Analyst Journal - INC-2026-004
+# Investigation Journal: INC-2026-004
 
 Reference: BCC-2026 / INC-2026-004. Analyst: Johan-Emmanuel Hatchi (blue11).
 

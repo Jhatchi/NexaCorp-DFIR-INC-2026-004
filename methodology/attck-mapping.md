@@ -1,4 +1,4 @@
-# MITRE ATT&CK Mapping - INC-2026-004
+# MITRE ATT&CK Mapping: INC-2026-004
 
 Reference: BCC-2026 / INC-2026-004. Framework: MITRE ATT&CK Enterprise v15.
 

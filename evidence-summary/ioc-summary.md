@@ -1,4 +1,4 @@
-# IOC Summary - INC-2026-004
+# Indicators of Compromise: INC-2026-004
 
 Reference: BCC-2026 / INC-2026-004.
 

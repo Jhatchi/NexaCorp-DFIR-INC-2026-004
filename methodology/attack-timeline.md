@@ -1,4 +1,4 @@
-# Attack Timeline - INC-2026-004
+# Attack Timeline: INC-2026-004
 
 Reference: BCC-2026 / INC-2026-004. Target: bru-web-01.
 
