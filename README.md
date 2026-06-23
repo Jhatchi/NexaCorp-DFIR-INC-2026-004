@@ -40,7 +40,7 @@ All IP addresses, hostnames, account names, hashes, and indicators of compromise
 
 ## Engagement context
 
-**Scenario (fictional).** NexaCorp Industries reported a fourth security incident, this time on its web application layer. After three incidents on the Linux infrastructure (INC-2026-001 to 003), the same threat actor shifted to a new attack surface: the employee self-service portal `bru-web-01`. The web application firewall logged unusual query patterns (`syntax error`, `UNION SELECT`) against the login and account-lookup form, which talks directly to a back-end database.
+**Scenario (fictional).** NexaCorp Industries reported a fourth security incident, this time on its web application layer. After three incidents on the Linux infrastructure (INC-2026-001 to 003), the attacker shifted to a new attack surface: the employee self-service portal `bru-web-01`. The source IP (172.16.50.10) is the same as the external attacker of INC-2026-001, so the activity is assessed as a continuation of the same campaign. The web application firewall logged unusual query patterns (`syntax error`, `UNION SELECT`) against the login and account-lookup form, which talks directly to a back-end database.
 
 **Mandate.** Marc Wauters (IT Infrastructure Manager) required a determination of whether the form was successfully abused, what data the attacker read, which employee accounts were exposed, and what the attacker did with what they stole.
 
