@@ -1,4 +1,4 @@
-# NexaCorp DFIR Engagement (INC-2026-004) - SQL Injection Investigation
+# NexaCorp DFIR: INC-2026-004 - SQL Injection Investigation
 
 Forensic investigation of a SQL Injection attack against the NexaCorp employee self-service portal (`bru-web-01`). An external attacker abused the portal login and account-lookup form to read the back-end database, exfiltrated the full `users` table, cracked a weak credential offline, and reused it to obtain an authenticated SSH foothold on the same server. Conducted as a solo engagement during the BeCode Brussels Blue & Red Team bootcamp (Mission 04), as the continuation of [INC-2026-001](https://github.com/Jhatchi/NexaCorp-DFIR-INC-2026-001), [INC-2026-002](https://github.com/Jhatchi/NexaCorp-DFIR-INC-2026-002), and [INC-2026-003](https://github.com/Jhatchi/NexaCorp-DFIR-INC-2026-003). The series continues with [INC-2026-005](https://github.com/Jhatchi/NexaCorp-DFIR-INC-2026-005), an OS command injection and web shell investigation on the same `bru-web-01` portal.
 
@@ -9,6 +9,8 @@ Forensic investigation of a SQL Injection attack against the NexaCorp employee s
 [![CWE](https://img.shields.io/badge/CWE--89-SQL%20Injection-orange.svg)](https://cwe.mitre.org/data/definitions/89.html)
 ![License](https://img.shields.io/badge/license-MIT-yellow.svg)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Johan--Emmanuel%20Hatchi-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/johan-emmanuel-hatchi/)
+
+This repository documents a SOC analyst engagement carried out as part of the BeCode Cybersecurity Bootcamp (promotion 2025-2026). It reconstructs a web-application intrusion from access-log and packet-capture evidence, then delivers a validated set of Suricata detection rules. It is the fourth incident in the NexaCorp DFIR series.
 
 ## Contents
 
