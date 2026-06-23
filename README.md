@@ -10,6 +10,26 @@ Forensic investigation of a SQL Injection attack against the NexaCorp employee s
 ![License](https://img.shields.io/badge/license-MIT-yellow.svg)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Johan--Emmanuel%20Hatchi-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/johan-emmanuel-hatchi/)
 
+## Contents
+
+- [Operational notice](#operational-notice)
+- [At a glance](#at-a-glance)
+- [Engagement context](#engagement-context)
+- [Executive summary](#executive-summary)
+- [Kill chain summary](#kill-chain-summary)
+- [Findings summary](#findings-summary)
+- [How to read this repository](#how-to-read-this-repository)
+- [Methodology](#methodology)
+- [Tools used](#tools-used)
+- [Detection engineering](#detection-engineering)
+- [Repository layout](#repository-layout)
+- [Reproducibility](#reproducibility)
+- [Known limits](#known-limits)
+- [NexaCorp DFIR series](#nexacorp-dfir-series)
+- [Acknowledgments](#acknowledgments)
+- [About](#about)
+- [License](#license)
+
 ## Operational notice
 
 **This is a lab engagement against fictitious infrastructure.** NexaCorp Industries is a fictional client used as the scenario for BeCode Brussels Mission 04. The host `bru-web-01` is an isolated lab VM running a deliberately vulnerable web application (DVWA). No real organization, network, or human was attacked.
